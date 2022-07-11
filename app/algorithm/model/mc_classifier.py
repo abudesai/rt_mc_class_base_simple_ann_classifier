@@ -9,7 +9,6 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import datasets, transforms
 
 device = 'cuda:0' if T.cuda.is_available() else 'cpu'
-device = 'cpu'
 print("Using device: ", device)
 
 
@@ -51,8 +50,7 @@ class Net(T.nn.Module):
         return z
 
 
-class Dataset(Dataset):
-    
+class Dataset(Dataset):    
     def __init__(self,x,y):
         self.x = x
         self.y = y
@@ -95,7 +93,8 @@ def test(device, model, test_loader):
 
 
 
-class Classifier():     
+class Classifier():  
+       
     def __init__(self, D, K, lr = 1e-2, activation='relu', **kwargs) -> None:
         self.D = D      
         self.K = K
@@ -174,7 +173,6 @@ class Classifier():
                 if epoch % self.print_period == 0 or epoch == epochs-1:
                     print(f'Epoch: {epoch+1}/{epochs}, loss: {np.round(loss.item(), 5)}')
         
-        
         return losses
 
     
@@ -211,11 +209,9 @@ class Classifier():
 
     @classmethod
     def load(cls, model_path): 
-        # print(model_params_fname, model_wts_fname)
         model_params = joblib.load(os.path.join(model_path, model_params_fname))
         classifier = cls(**model_params)
-        classifier.net.load_state_dict(T.load( os.path.join(model_path, model_wts_fname)))
-        
+        classifier.net.load_state_dict(T.load( os.path.join(model_path, model_wts_fname)))        
         return classifier
 
 
